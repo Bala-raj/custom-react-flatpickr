@@ -26,11 +26,26 @@ class Example extends React.Component {
 
     render() {
         return (
-            <div style={{  }}>                               
+            <div style={{  }}>   
+
+            <div>
+                <label> Date Range Picker </label>                            
                 <DataPicker options={{ mode:"range", inline: true  }} > 
                     <input type="text" value="" style={{height: '25px'}} />
                 </DataPicker>
-            </div>
+</div>
+                <div>
+                <label> Date Picker </label>                            
+                <DataPicker options={{ dateFormat: "Y-m-d H:i", inline: true  }} > 
+                    <input type="text" value="" style={{height: '25px'}} />
+                </DataPicker>
+</div>
+                <div>
+                <label> Date and Time Picker </label>                            
+                <DataPicker options={{ enableTime: true, inline: true  }} > 
+                    <input type="text" value="" style={{height: '25px'}} />
+                </DataPicker>
+            </div></div>
         )
     }
 }

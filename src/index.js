@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 import Flatpickr from 'flatpickr';
 import moment from 'moment';
 
-import 'flatpickr/dist/themes/material_green.css';
-import './style.css';
+import './style.scss';
 
 const hooks = [
   'onChange',
@@ -126,20 +125,20 @@ class DateTimePicker extends Component {
 
     if(options.mode && options.mode === 'range') {
       return (
-        <div className="daterangepicker dropdown-menu ltr show-calendar">
+        <div className="daterangepicker dropdown-menu opensright ltr">
           <div className="ranges">
             <ul>
-              <li data-range-key="Today" className="active">Today</li>
+              <li data-range-key="Today" >Today</li>
               <li data-range-key="Yesterday">Yesterday</li>
               <li data-range-key="Last 7 Days">Last 7 Days</li>
               <li data-range-key="Last 30 Days">Last 30 Days</li>
               <li data-range-key="Last Week">Last Week</li>
               <li data-range-key="Last Month">Last Month</li>
               <li data-range-key="This Month">This Month</li>
-              <li data-range-key="Custom Range">Custom Range</li>
+              <li data-range-key="Custom Range" className="active">Custom Range</li>
             </ul>          
           </div>
-          <div className="calendar">
+          <div className="calendar hasrange">
             <div className="daterangepicker_input" {...props} ref={node => { this.node = node }}>
               <input className="input-mini"  defaultValue={defaultValue} />
             </div>
@@ -156,7 +155,8 @@ class DateTimePicker extends Component {
       );
     } 
    
-    return (<input {...props} defaultValue={defaultValue} ref={node => { this.node = node }} />);   
+    // return (<div className="calendar opensright hastime"> <div className="daterangepicker_input" {...props} ref={node => { this.node = node }} >{children}</div></div>);   
+    return (<input {...props} ref={node => { this.node = node }} value={defaultValue} />);   
   }
 }
 

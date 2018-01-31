@@ -1,9 +1,10 @@
 
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Flatpickr from 'flatpickr';
 import moment from 'moment';
 
+//import 'flatpickr/dist/themes/material_green.css';
 import './style.scss';
 
 const hooks = [
@@ -17,14 +18,20 @@ const hooks = [
   'onDayCreate'
 ]
 
-const Ranges = {
-  'Today': [moment(), moment()],
-  'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-  'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-  'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-  'Last Week': [moment().subtract(1, 'week').startOf('week'), moment().subtract(1, 'week').endOf('week')],
-  'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
-  'This Month': [moment().startOf('month'), moment().endOf('month')],
+const defaultFormat = 'm/d/Y';
+
+const DefaultRanges = {
+  'Today': [moment().valueOf(), moment().valueOf()],
+  'Yesterday': [moment().subtract(1, 'days').valueOf(), moment().subtract(1, 'days').valueOf()],
+  'Last 7 Days': [moment().subtract(6, 'days').valueOf(), moment().valueOf()],
+  'Last 30 Days': [moment().subtract(29, 'days').valueOf(), moment().valueOf()],
+  'Last Week': [moment().subtract(1, 'week').startOf('week').valueOf(), moment().subtract(1, 'week').endOf('week').valueOf()],
+  'Last Month': [moment().subtract(1, 'month').startOf('month').valueOf(), moment().subtract(1, 'month').endOf('month').valueOf()],
+  'This Month': [moment().startOf('month').valueOf(), moment().valueOf()],
+}
+
+function compareDefaultRanges(ranges) {
+  return ranges;
 }
 
 class DateTimePicker extends Component {
@@ -50,6 +57,15 @@ class DateTimePicker extends Component {
 
   static defaultProps = {
     options: {}
+  }
+
+  constructor() {
+    super();
+
+    this.state = {
+      showCalendar: false,
+      showPicker: false,
+    }
   }
 
   componentWillReceiveProps(props) {
@@ -86,14 +102,20 @@ class DateTimePicker extends Component {
     if (props.hasOwnProperty('value') && props.value !== this.props.value) {
       this.flatpickr.setDate(props.value, false)
     }
+
+    if (props.options.defaultValue && props.options.defaultValue !== this.props.options.defaultValue) {
+      this.flatpickr.setDate(props.options.defaultValue, false)
+    }
   }
 
   componentDidMount() {
     const options = {
       onClose: () => {
-        this.node.blur && this.node.blur()
+        this.node.blur && this.node.blur();
+        this.setState({ showCalendar: false, showPicker: false });
       },
-      ...this.props.options
+      ...this.props.options,
+      onChange: this.onChange,
     }
 
     // Add prop hooks to options
@@ -109,9 +131,36 @@ class DateTimePicker extends Component {
       this.flatpickr.setDate(this.props.value, false)
     }
   }
+  
 
   componentWillUnmount() {
     this.flatpickr.destroy()
+  }
+
+  onChange = (selectedDates, dateStr, instance) => {
+    if (this.props.options.onChange) {
+      this.props.options.onChange(selectedDates, dateStr, instance);
+    }
+  }
+
+  onClickOfDateRanges = (e) => {
+    if (this.props.options.onChange){
+      const ranges = e.target.dataset.rangeValue.split(',').map(v => Number(v));
+      this.props.options.onChange(
+        ranges,
+        `${this.flatpickr.formatDate(new Date(ranges[0]), ( this.props.options.dateFormat ||defaultFormat))} to ${this.flatpickr.formatDate(new Date(ranges[1]), ( this.props.options.dateFormat ||defaultFormat))}`,
+        this.flatpickr,
+      );
+    }    
+    this.setState({ showCalendar: false, showPicker: false });
+  }
+
+  onClickOfCustom = () => {
+    this.setState({ showCalendar: true });
+  }
+
+  onClickOfChildren = () => {
+    this.setState({ showPicker: !this.state.showPicker });
   }
 
   render() {
@@ -123,40 +172,47 @@ class DateTimePicker extends Component {
       delete props[hook]
     })
 
-    if(options.mode && options.mode === 'range') {
+    if (options.mode && options.mode === 'range') {
       return (
-        <div className="daterangepicker dropdown-menu opensright ltr">
-          <div className="ranges">
-            <ul>
-              <li data-range-key="Today" >Today</li>
-              <li data-range-key="Yesterday">Yesterday</li>
-              <li data-range-key="Last 7 Days">Last 7 Days</li>
-              <li data-range-key="Last 30 Days">Last 30 Days</li>
-              <li data-range-key="Last Week">Last Week</li>
-              <li data-range-key="Last Month">Last Month</li>
-              <li data-range-key="This Month">This Month</li>
-              <li data-range-key="Custom Range" className="active">Custom Range</li>
-            </ul>          
-          </div>
-          <div className="calendar hasrange">
-            <div className="daterangepicker_input" {...props} ref={node => { this.node = node }}>
-              <input className="input-mini"  defaultValue={defaultValue} />
+        <Fragment>
+          <div onClick={this.onClickOfChildren}> {children} </div>
+          <div className={`daterangepicker dropdown-menu opensright ltr ${this.state.showCalendar ? 'show-calendar' : ''} ${this.state.showPicker ? '' : 'hide'}`}>
+            <div className="ranges">
+              <ul>
+                {
+                  options.ranges && options.ranges.length && [
+                    Object.keys(options.ranges).map((key) => <li key={key} data-range-key={key} data-range-value={options.ranges[key]} onClick={this.onClickOfDateRanges} className=""> {key} </li>),
+                    <li key={'custom'} data-range-key={'custom'} onClick={this.onClickOfCustom} className="">Custom </li>
+                  ]
+                }
+                {
+                  (!options.ranges || !options.ranges.length) && [
+                    Object.keys(DefaultRanges).map((key) => <li key={key} data-range-key={key} data-range-value={DefaultRanges[key]} onClick={this.onClickOfDateRanges} className=""> {key} </li>),
+                    <li key={'custom'} data-range-key={'custom'} onClick={this.onClickOfCustom} className="">Custom </li>
+                  ]
+                }
+              </ul>
+            </div>
+            <div className="hasrange">
+              <div className="daterangepicker_input" {...props} ref={node => { this.node = node }}>
+                <input className="input-mini" defaultValue={defaultValue} />
+              </div>
             </div>
           </div>
+        </Fragment>
+      );
+    }
+
+    if (options.wrap) {
+      return (
+        <div {...props} ref={node => { this.node = node }}>
+          {children}
         </div>
       );
     }
 
-    if( options.wrap) {
-      return (
-        <div {...props} ref={node => { this.node = node }}>
-          { children }
-        </div>
-      );
-    } 
-   
     // return (<div className="calendar opensright hastime"> <div className="daterangepicker_input" {...props} ref={node => { this.node = node }} >{children}</div></div>);   
-    return (<input {...props} ref={node => { this.node = node }} value={defaultValue} />);   
+    return (<input {...props} ref={node => { this.node = node }} defaultValue={defaultValue} />);
   }
 }
 

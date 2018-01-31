@@ -33,7 +33,7 @@ export default () => ({
                 ]
             },
             {
-                test: /\.scss(|css)$/,
+                test: /\.(scss|css)$/,
                 loader: 'style-loader!css-loader!sass-loader',
             },
         ]

@@ -5,8 +5,6 @@
     border-radius: 4px;
     padding: 10px 10px 5px;
     margin-top: 5px;
-    top: 20px;
-    left: 10px;
     -webkit-box-shadow: 0 0 20px 0 rgba(12, 51, 92, 0.1);
     -moz-box-shadow: 0 0 20px 0 rgba(12, 51, 92, 0.1);
     box-shadow: 0 0 20px 0 rgba(12, 51, 92, 0.1);
@@ -37,18 +35,22 @@
         border-bottom: 6px solid #fff;
         border-left: 6px solid transparent;
     }
-    .calendar {
+    .hasrange {
         display: none;
     }
-    &.show-calendar .calendar {
+    &.show-calendar .hasrange {
         display: block;
+    }
+    
+    &.hide {
+        display: none;
     }
 }
 
 .ranges {
     font-size: 11px;
     float: left;
-    margin: 0px 15px 5px 0;
+    margin: 5px 15px 5px 0;
     text-align: left;
     font-family: 'Lato', sans-serif;
     ul {
@@ -122,49 +124,55 @@
 }
 
 /* calendar holder styles */
-.calendar {
-    &.hastime {
+.flatpickr-calendar {
+    position: absolute;
+    color: inherit;
+    background: #fff;
+    border-radius: 4px;
+    padding: 10px 10px 5px;
+    margin-top: 5px;
+    top: 20px;
+    left: 10px;
+    -webkit-box-shadow: 0 0 20px 0 rgba(12, 51, 92, 0.1);
+    -moz-box-shadow: 0 0 20px 0 rgba(12, 51, 92, 0.1);
+    box-shadow: 0 0 20px 0 rgba(12, 51, 92, 0.1);
+    
+    &:after, &:before {
         position: absolute;
-        color: inherit;
-        background: #fff;
-        border-radius: 4px;
-        padding: 10px 10px 5px;
-        margin-top: 5px;
-        top: 20px;
+        display: inline-block;
+        border-bottom-color: rgba(0, 0, 0, 0.2);
+        content: '';
+    }
+    &:before {
+        top: -7px;
+        left: 9px;
+        border-right: 7px solid transparent;
+        border-left: 7px solid transparent;
+        border-bottom: 7px solid transparent;
+    }
+    &:after {
+        top: -6px;
+        border-right: 6px solid transparent;
+        border-bottom: 6px solid #fff;
+        border-left: 6px solid transparent;
         left: 10px;
-        -webkit-box-shadow: 0 0 20px 0 rgba(12, 51, 92, 0.1);
-        -moz-box-shadow: 0 0 20px 0 rgba(12, 51, 92, 0.1);
-        box-shadow: 0 0 20px 0 rgba(12, 51, 92, 0.1);
-        
-        &:after, &:before {
-            position: absolute;
-            display: inline-block;
-            border-bottom-color: rgba(0, 0, 0, 0.2);
-            content: '';
-        }
-        &:before {
-            top: -7px;
-            border-right: 7px solid transparent;
-            border-left: 7px solid transparent;
-            border-bottom: 7px solid transparent;
-        }
-        &:after {
-            top: -6px;
-            border-right: 6px solid transparent;
-            border-bottom: 6px solid #fff;
-            border-left: 6px solid transparent;
-        }
-        &.opensright {
-            &:before {
-                left: 9px;
-            }
-            &:after {
-                left: 10px;
-            }
-        }
     }
 }
     
+.hasrange {
+    float: left;
+    .flatpickr-calendar {
+        position: static;
+        box-shadow: none;
+        top: unset;
+        left: unset;
+        margin: 0;
+        padding: 0;
+    }
+}
+
+
+
 .flatpickr-calendar {
     background: transparent;
     overflow: hidden;
@@ -669,9 +677,9 @@ span.flatpickr-weekday {
     -webkit-flex-basis: 14.2857143%;
     -ms-flex-preferred-size: 14.2857143%;
     flex-basis: 14.2857143%;
-    max-width: 36px;
-    height: 30px;
-    line-height: 30px;
+    max-width: 35px;
+    height: 28px;
+    line-height: 28px;
     margin: 0;
     display: inline-block;
     position: relative;

@@ -30,8 +30,14 @@ const DefaultRanges = {
   'This Month': [moment().startOf('month').valueOf(), moment().valueOf()],
 }
 
-function compareDefaultRanges(ranges) {
-  return ranges;
+function compareDefaultRanges(selectedRanges, rangesList) {
+  let match = '';
+  for(let range in rangesList) {    
+    if(selectedRanges.toString() === rangesList[range].toString()){
+      match = range;
+    }
+  }
+  return match;
 }
 
 class DateTimePicker extends Component {
@@ -173,29 +179,26 @@ class DateTimePicker extends Component {
     })
 
     if (options.mode && options.mode === 'range') {
+      const ranges = options.ranges || DefaultRanges;
+      const active = compareDefaultRanges(options.defaultValue, ranges );
+      const custom = options.defaultValue && !active;
       return (
         <Fragment>
           <div onClick={this.onClickOfChildren}> {children} </div>
-          <div className={`daterangepicker dropdown-menu opensright ltr ${this.state.showCalendar ? 'show-calendar' : ''} ${this.state.showPicker ? '' : 'hide'}`}>
+          <div className={`daterangepicker dropdown-menu opensright ltr ${this.state.showCalendar || custom ? 'show-calendar' : ''} ${this.state.showPicker ? '' : 'hide'}`}>
             <div className="ranges">
-              <ul>
+              <ul>               
                 {
-                  options.ranges && options.ranges.length && [
-                    Object.keys(options.ranges).map((key) => <li key={key} data-range-key={key} data-range-value={options.ranges[key]} onClick={this.onClickOfDateRanges} className=""> {key} </li>),
-                    <li key={'custom'} data-range-key={'custom'} onClick={this.onClickOfCustom} className="">Custom </li>
-                  ]
-                }
-                {
-                  (!options.ranges || !options.ranges.length) && [
-                    Object.keys(DefaultRanges).map((key) => <li key={key} data-range-key={key} data-range-value={DefaultRanges[key]} onClick={this.onClickOfDateRanges} className=""> {key} </li>),
-                    <li key={'custom'} data-range-key={'custom'} onClick={this.onClickOfCustom} className="">Custom </li>
+                  ranges && [
+                    Object.keys(ranges).map((key) => <li key={key} data-range-key={key} data-range-value={DefaultRanges[key]} onClick={this.onClickOfDateRanges} className={active === key ? 'active': ''}> {key} </li>),
+                    <li key={'custom'} data-range-key={'custom'} onClick={this.onClickOfCustom} className={ custom ? 'active': ''  }>Custom </li>
                   ]
                 }
               </ul>
             </div>
             <div className="hasrange">
               <div className="daterangepicker_input" {...props} ref={node => { this.node = node }}>
-                <input className="input-mini" defaultValue={defaultValue} />
+                <input className="input-mini" defaultValue={options.defaultValue} />
               </div>
             </div>
           </div>

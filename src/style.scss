@@ -1,5 +1,6 @@
 .daterangepicker {
     position: absolute;
+    z-index: 11;
     color: inherit;
     background: #fff;
     border-radius: 4px;
@@ -115,6 +116,7 @@
     margin: 0 0 5px 0;
     padding: 0 15px;
     width: 100%;
+    max-width: unset;
     box-sizing: border-box;
     border-radius: 4px;
     pointer-events: none;
@@ -123,42 +125,6 @@
     }
 }
 
-/* calendar holder styles */
-.flatpickr-calendar {
-    position: absolute;
-    color: inherit;
-    background: #fff;
-    border-radius: 4px;
-    padding: 10px 10px 5px;
-    margin-top: 5px;
-    top: 20px;
-    left: 10px;
-    -webkit-box-shadow: 0 0 20px 0 rgba(12, 51, 92, 0.1);
-    -moz-box-shadow: 0 0 20px 0 rgba(12, 51, 92, 0.1);
-    box-shadow: 0 0 20px 0 rgba(12, 51, 92, 0.1);
-    
-    &:after, &:before {
-        position: absolute;
-        display: inline-block;
-        border-bottom-color: rgba(0, 0, 0, 0.2);
-        content: '';
-    }
-    &:before {
-        top: -7px;
-        left: 9px;
-        border-right: 7px solid transparent;
-        border-left: 7px solid transparent;
-        border-bottom: 7px solid transparent;
-    }
-    &:after {
-        top: -6px;
-        border-right: 6px solid transparent;
-        border-bottom: 6px solid #fff;
-        border-left: 6px solid transparent;
-        left: 10px;
-    }
-}
-    
 .hasrange {
     float: left;
     .flatpickr-calendar {
@@ -167,7 +133,7 @@
         top: unset;
         left: unset;
         margin: 0;
-        padding: 0;
+        padding: 0 5px 10px;
     }
 }
 
@@ -178,23 +144,37 @@
     overflow: hidden;
     max-height: 0;
     opacity: 0;
+    border: 0;
     visibility: hidden;
     text-align: center;
-    padding: 0;
     -webkit-animation: none;
     animation: none;
     direction: ltr;
-    border: 0;
+    touch-action: manipulation;
+    
     font-size: 14px;
     line-height: 24px;
+    font-family: "Lato", sans-serif;
+    
+    color: inherit;
     border-radius: 5px;
+    background: #fff;
+
     position: absolute;
     width: 250px;
+    
+    -webkit-box-shadow: 0 0 20px 0 rgba(12, 51, 92, 0.1);
+    -moz-box-shadow: 0 0 20px 0 rgba(12, 51, 92, 0.1);
+    box-shadow: 0 0 20px 0 rgba(12, 51, 92, 0.1);
+
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
     -ms-touch-action: manipulation;
-    touch-action: manipulation;
-    font-family: "Lato", sans-serif;
+    
+    padding: 12px 5px;
+    margin-top: 5px;
+    box-sizing: content-box;
+    
     &.open,
     &.inline {
         opacity: 1;
@@ -238,68 +218,88 @@
     &.showTimeInput.hasTime {
         .flatpickr-time {
             height: 30px;
-            border-top: 1px solid rgba(72, 72, 72, 0.2);
+            // border-top: 1px solid rgba(72, 72, 72, 0.2);
         }
         .flatpickr-innerContainer {
             border-bottom: 0;
         }
-        .flatpickr-time {
-            border: 1px solid rgba(72, 72, 72, 0.2);
-        }
+        // .flatpickr-time {
+        //     border: 1px solid rgba(72, 72, 72, 0.2);
+        // }
     }
     &.noCalendar.hasTime .flatpickr-time {
         height: auto;
     }
-    // &:before,
-    // &:after {
-    //     position: absolute;
-    //     display: block;
-    //     pointer-events: none;
-    //     border: solid transparent;
-    //     content: '';
-    //     height: 0;
-    //     width: 0;
-    //     left: 22px;
-    // }
-    // &.rightMost {
-    //     &:before,
-    //     &:after {
-    //         left: auto;
-    //         right: 22px;
-    //     }
-    // }
-    // &:before {
-    //     border-width: 5px;
-    //     margin: 0 -5px;
-    // }
-    // &:after {
-    //     border-width: 4px;
-    //     margin: 0 -4px;
-    // }
-    // &.arrowTop {
-    //     &:before,
-    //     &:after {
-    //         bottom: 100%;
-    //     }
-    //     &:before {
-    //         border-bottom-color: rgba(72, 72, 72, 0.2);
-    //     }
-    //     &:after {
-    //         border-bottom-color: #00BBE5;
-    //     }
-    // }
-    // &.arrowBottom {
-    //     &:before,
-    //     &:after {
-    //         top: 100%;
-    //     }
-    //     &:before {
-    //         border-top-color: rgba(72, 72, 72, 0.2);
-    //     }
-    //     &:after {
-    //         border-top-color: #00BBE5;
-    //     }
-    // }
+
+
+    &:after, 
+    &:before {
+        position: absolute;
+        display: inline-block;
+        border-bottom-color: rgba(0, 0, 0, 0.005);
+        content: '';
+    }
+    &:before {
+        border-right: 7px solid transparent;
+        border-left: 7px solid transparent;
+        border-bottom: 7px solid rgba(0, 0, 0, 0.005); ;
+    }
+    &:after {
+        border-right: 6px solid transparent;
+        border-bottom: 6px solid #fff;
+        border-left: 6px solid transparent;
+    }
+
+    &:before,
+    &:after {
+        position: absolute;
+        display: block;
+        pointer-events: none;
+        border: solid transparent;
+        content: '';
+        height: 0;
+        width: 0;
+        left: 22px;
+    }
+    &.rightMost {
+        &:before,
+        &:after {
+            left: auto;
+            right: 22px;
+        }
+    }
+    &:before {
+        border-width: 5px;
+        margin: 0 -5px;
+    }
+    &:after {
+        border-width: 4px;
+        margin: 0 -4px;
+    }
+    &.arrowTop {
+        &:before,
+        &:after {
+            bottom: 100%;
+        }
+        &:before {
+            border-bottom-color: rgba(0, 0, 0, 0.05);
+        }
+        &:after {
+            border-bottom-color: #fff
+        }
+    }
+    &.arrowBottom {
+        &:before,
+        &:after {
+            top: 100%;
+        }
+        &:before {
+            border-top-color: rgba(0, 0, 0, 0.05);
+        }
+        &:after {
+            border-top-color: #fff;
+        }
+    }
     &:focus {
         outline: 0;
     }
@@ -711,8 +711,10 @@ span.flatpickr-weekday {
         // background: #00BBE5;
         // color: #fff;
         &:hover,
-        &:focus {
+        &:focus, {
             border-radius: 5px;
+            background: #00BBE5;
+            color: #fff;
         }
     }
     &:hover,
@@ -750,14 +752,20 @@ span.flatpickr-weekday {
     }
     &.selected.endRange,
     &.startRange.endRange,
-    &.endRange.endRange {
+    &.endRange.endRange,
+    &.endRange.inRange {
         border-radius: 0 5px 5px 0;
     }
     &.selected.startRange+.endRange,
     &.startRange.startRange+.endRange,
     &.endRange.startRange+.endRange {
-        -webkit-box-shadow: -10px 0 0 #00BBE5;
-        box-shadow: -10px 0 0 #00BBE5;
+        -webkit-box-shadow: -1px 0 0 #00BBE5;
+        box-shadow: -1px 0 0 #00BBE5;
+    }
+    &.today.endrange.inRange,
+    &.prevMonthDay.today.endRange.inRange,
+    &.nextMonthDay.today.endRange.inRange {
+        background: #00BBE5;
     }
     &.selected.startRange.endRange,
     &.startRange.startRange.endRange {
@@ -811,16 +819,16 @@ span.flatpickr-weekday {
     }
     &.week.selected {
         border-radius: 0;
-        -webkit-box-shadow: -5px 0 0 #00BBE5, 5px 0 0 #00BBE5;
-        box-shadow: -5px 0 0 #00BBE5, 5px 0 0 #00BBE5;
+        -webkit-box-shadow: -1px 0 0 #00BBE5, 1px 0 0 #00BBE5;
+        box-shadow: -1px 0 0 #00BBE5, 1px 0 0 #00BBE5;
     }
 }
 
 
 .flatpickr-day.inRange {
   border-radius: 0;
-  // -webkit-box-shadow: -5px 0 0 #ebf4f8, 5px 0 0 #ebf4f8;
-  //         box-shadow: -5px 0 0 #ebf4f8, 5px 0 0 #ebf4f8;
+  -webkit-box-shadow: -1px 0 0 #ebf4f8, 1px 0 0 #ebf4f8;
+          box-shadow: -1px 0 0 #ebf4f8, 1px 0 0 #ebf4f8;
 }
 
 

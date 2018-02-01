@@ -1,7 +1,7 @@
 import React from 'react';
 
 import DataPicker from '../src/index';
-import './style.css';
+import './style.scss';
 
 class Example extends React.Component {
     constructor(props) {
@@ -24,22 +24,31 @@ class Example extends React.Component {
         return (
             <div style={{}}>
 
-                <div>
-                    <label> Date Range Picker </label>
+                <div className="datepicker range">
+                    <label className="title"> Date Range Picker </label>
+                    <p className="description">You can config Range Picker in calendar.</p>
+                    <div class="highlight">
+                        <pre>&#123;`
+
+                        
+                                        enableTime<span>:</span> <span>true</span>,
+                        `&#125;
+                        </pre>
+                    </div>
                     <DataPicker options={{ mode: "range", inline: true, maxDate: Date.now(), onChange: this.onChange, defaultValue: this.state.dateRange }} >
-                        <input type="text" value={this.state.dateStr} style={{ height: '25px' }} />
+                        <input type="text" value={this.state.dateStr} />
                     </DataPicker>
                 </div>
-                <div>
-                    <label> Date Picker </label>
+                <div className="datepicker">
+                    <label className="title"> Date Picker </label>
                     <DataPicker options={{ dateFormat: "Y-m-d H:i", maxDate: Date.now(), onChange: this.onChange }} >
-                        <input type="text" value="" style={{ height: '25px' }} />
+                        <input type="text" value="" />
                     </DataPicker>
                 </div>
-                <div>
-                    <label> Date and Time Picker </label>
+                <div className="datepicker time">
+                    <label className="title"> Date and Time Picker </label>
                     <DataPicker options={{ enableTime: true, maxDate: Date.now() }} >
-                        <input type="text" value="" style={{ height: '25px' }} />
+                        <input type="text" value="" />
                     </DataPicker>
                 </div></div>
         )

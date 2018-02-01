@@ -1,0 +1,38 @@
+#root {
+	font-family: 'lato', 'Arial', sans-serief;
+}
+.datepicker {
+	position: relative;
+	padding: 50px 30px;
+	.title {
+	    color: #5893ff;
+	    font-size: 20px;
+	    line-height: 20px;
+	    margin: 0;
+	    padding: 0;
+	}
+	input {
+	    border: 1px solid rgba(172, 172, 172, 0.2);
+	    color: #555;
+	    height: 28px;
+	    line-height: 28px;
+	    font-size: 12px;
+	    display: block;
+	    vertical-align: middle;
+	    margin: 20px 0 0 0;
+	    padding: 0 15px;
+	    width: 100%;
+	    max-width: 200px;
+	    border-radius: 4px;
+	    outline: none;
+	}
+	.description {
+		font-size: 14px;
+		margin: 20px 0;
+		color: #3b4752;
+	}
+	.highlight {
+		background-color: #f0f3f3;
+		padding: 20px;
+	}
+}

@@ -174,7 +174,7 @@
     padding: 12px 5px;
     margin-top: 5px;
     box-sizing: content-box;
-    
+
     &.open,
     &.inline {
         opacity: 1;
@@ -218,10 +218,11 @@
     &.showTimeInput.hasTime {
         .flatpickr-time {
             height: 30px;
-            // border-top: 1px solid rgba(72, 72, 72, 0.2);
+            border-top: 1px solid rgba(72, 72, 72, 0.2);
         }
         .flatpickr-innerContainer {
             border-bottom: 0;
+            padding-bottom: 5px;
         }
         // .flatpickr-time {
         //     border: 1px solid rgba(72, 72, 72, 0.2);
@@ -230,7 +231,16 @@
     &.noCalendar.hasTime .flatpickr-time {
         height: auto;
     }
-
+    &.hasTime {
+        padding: 8px 4px 4px;
+        .flatpickr-time {
+            margin: 0 -4px;
+            display: none;
+        }
+        &.showTimeInput .flatpickr-time {
+            display: flex;
+        }
+    }
 
     &:after, 
     &:before {
@@ -903,6 +913,7 @@ span.flatpickr-weekday {
     display: -ms-flexbox;
     display: flex;
     background: #fff;
+    justify-content: center;
     border-radius: 0 0 5px 5px;
     &:after {
         content: "";
@@ -910,28 +921,30 @@ span.flatpickr-weekday {
         clear: both;
     }
     .numInputWrapper {
-        -webkit-box-flex: 1;
-        -webkit-flex: 1;
-        -ms-flex: 1;
-        flex: 1;
-        width: 40%;
+        // -webkit-box-flex: 1;
+        // -webkit-flex: 1;
+        // -ms-flex: 1;
+        // flex: 1;
+        width: 40px;
         height: 30px;
-        float: left;
+        // float: left;
         span {
+            padding: 0 3px 0 3px;
+            width: 12px;
             &.arrowUp:after {
-                border-bottom-color: #484848;
+                border-bottom-color: rgba(59,71,82,0.8);
             }
             &.arrowDown:after {
-                border-top-color: #484848;
+                border-top-color: rgba(59,71,82,0.8);
             }
         }
     }
-    &.hasSeconds .numInputWrapper {
-        width: 26%;
-    }
-    &.time24hr .numInputWrapper {
-        width: 49%;
-    }
+    // &.hasSeconds .numInputWrapper {
+    //     width: 26%;
+    // }
+    // &.time24hr .numInputWrapper {
+    //     width: 49%;
+    // }
     input {
         background: transparent;
         -webkit-box-shadow: none;
@@ -964,9 +977,10 @@ span.flatpickr-weekday {
         display: inline-block;
         float: left;
         line-height: inherit;
-        color: #484848;
+        color: #3b4752;
         font-weight: bold;
-        width: 2%;
+        width: 5px;
+        text-align: right;
         -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
@@ -980,9 +994,9 @@ span.flatpickr-weekday {
         display: inline-block;
         float: left;
         line-height: inherit;
-        color: #484848;
+        color: #3b4752;
         font-weight: bold;
-        width: 2%;
+        // width: 2%;
         -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
@@ -991,7 +1005,8 @@ span.flatpickr-weekday {
         -ms-flex-item-align: center;
         align-self: center;
         outline: 0;
-        width: 18%;
+        // width: 18%;
+        width: 40px;
         cursor: pointer;
         text-align: center;
         font-weight: 400;

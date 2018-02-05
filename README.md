@@ -1,65 +1,60 @@
-# Boilerplate for creating React-component npm package with ES2015
 
-Starter point for creating [React](https://facebook.github.io/react/) components that you can published on Npm.
+[![NPM version][npm-img]][npm-url]
+[![License][license-img]][license-url]
+[![Dependency status][david-img]][david-url]
 
-* Bundled with [Webpack 2](https://webpack.js.org/)
-* Develop with Hot Module Replacement [(HMR)](https://webpack.js.org/concepts/hot-module-replacement/)
-* Includes linting with [ESLint](http://eslint.org/)
-* Testing with [Jest](http://facebook.github.io/jest/).
+# react-flatpickr
+
+[Flatpickr](https://github.com/Bala-raj/custom-react-flatpickr) for React.
 
 ## Usage
 
-1. Install modules 
-    > yarn
+```jsx
+import 'flatpickr/dist/themes/material_green.min.css'
 
-2. Check **_package.json_** so that the information is correct.
-3. Start example and start coding! 
-    > yarn start
+import Flatpickr from 'react-flatpickr'
+import { Component } from 'react'
 
-4. Bundle with `yarn build`
-5. To test if it works correctly in another project you can use npm `npm install -S ../react-npm-component-boilerplate` Note the relative path
+class App extends Component {
+  constructor() {
+    super();
 
-E.g. this folder structure
+    this.state = {
+      date: new Date()
+    };
+  }
+
+  render() {
+    const { date } = this.state;
+    return (
+      <Flatpickr data-enable-time
+        value={date}
+        onChange={date => { this.setState({date}) }} />
+    )
+  }
+}
 ```
-    ./workspace/
-        MyProject
-        react-npm-boilerplate
+* `flatpickr options`: you can pass all `flatpickr parameters` to `props.options`
+* All flatpickr [hooks][hooks] can be passed as a react prop, or to `props.options`
+
+```jsx
+<Flatpickr options={{minDate: '2017-01-01'}} />
 ```
-### Extra
-* If you want to run tests: 
-    > yarn test
 
-* You need to write tests in `__tests__` folder or as `.test.js`.
-* It you want to keep watch run: 
-    > yarn test-watch
+### Themes
+Please import themes directly from the `flatpickr` dependency. In most cases, you should just be able to `import 'flatpickr/dist/themes/theme.css'`, but in some cases npm or yarn may install `flatpickr` in `node_modules/react-flatpickr/node_modules/flatpickr`. If that happens, removing your `node_modules` dir and reinstalling should put flatpickr in the root `node_modules` dir, or you can import from `react-flatpickr/node_modules/flatpickr` manually.
 
-* If you want coverage run: 
-    > yarn test-coverage
+## License
+MIT
 
-* If you want to run eslint: 
-    > yarn lint
-
-* If you want to automatically fix lint problems run :
-    > yarn lint-fix
-
-Adjust your `.eslintrc` config file to your own preference.
-
-## NPM equivalent
-yarn | npm
----- | ---
-`yarn` | `npm install`
-`yarn test` | `npm run test`
-`yarn build` | `npm run build`
-`yarn test-watch` | `npm run test-watch`
-`yarn test-coverage` | `npm run test-coverage`
-`yarn lint` | `npm run lint`
-`yarn lint-fix` | `npm run lint-fix`
-____
-### Resources
-
-* http://kloc.io/setting-up-react-workflow-babel-webpack/
-* https://facebook.github.io/jest/docs/webpack.html
-* https://webpack.js.org/guides/code-splitting-libraries/#manifest-file
-____
-### Credit
-Documentation is inspired by [Julian Ćwirko](https://github.com/juliancwirko) and the [https://github.com/juliancwirko/react-npm-boilerplate](https://github.com/juliancwirko/react-npm-boilerplate) package.
+[npm-img]: https://img.shields.io/npm/v/react-flatpickr.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/react-flatpickr
+[travis-img]: https://img.shields.io/travis/coderhaoxin/react-flatpickr.svg?style=flat-square
+[travis-url]: https://travis-ci.org/coderhaoxin/react-flatpickr
+[codecov-img]: https://img.shields.io/codecov/c/github/coderhaoxin/react-flatpickr.svg?style=flat-square
+[codecov-url]: https://codecov.io/github/coderhaoxin/react-flatpickr?branch=master
+[license-img]: https://img.shields.io/badge/license-MIT-green.svg?style=flat-square
+[license-url]: http://opensource.org/licenses/MIT
+[david-img]: https://img.shields.io/david/coderhaoxin/react-flatpickr.svg?style=flat-square
+[david-url]: https://david-dm.org/coderhaoxin/react-flatpickr
+[hooks]: https://chmln.github.io/flatpickr/events/#hooks

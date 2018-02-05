@@ -32,13 +32,38 @@ const DefaultRanges = {
 
 function compareDefaultRanges(selectedRanges, rangesList) {
   let match = '';
-  for(let range in rangesList) {    
-    if(selectedRanges.toString() === rangesList[range].toString()){
+  for (let range in rangesList) {
+    if (selectedRanges.toString() === rangesList[range].toString()) {
       match = range;
     }
   }
   return match;
 }
+
+/**
+ * Polyfill for parents method
+ * @param {*} selector
+ */
+function parents(selector) {
+  const elements = [];
+  let elem = this;
+  const ishaveselector = selector !== undefined;
+
+  while ((elem = elem.parentElement) !== null) { //eslint-disable-line
+    if (elem.nodeType !== Node.ELEMENT_NODE) {
+      continue; //eslint-disable-line
+    }
+
+    if (!ishaveselector || elem.matches(selector)) {
+      elements.push(elem);
+    }
+  }
+
+  return elements;
+}
+
+Element.prototype.parents = parents;
+
 
 class DateTimePicker extends Component {
   static propTypes = {
@@ -136,29 +161,43 @@ class DateTimePicker extends Component {
     if (this.props.hasOwnProperty('value')) {
       this.flatpickr.setDate(this.props.value, false)
     }
+
+    if (document.addEventListener) {
+      document.body.addEventListener('click', this.onClickOfDOM);
+    } else if (document.attachEvent) {
+      document.body.attachEvent('click', this.onClickOfDOM);
+    }
   }
-  
+
 
   componentWillUnmount() {
     this.flatpickr.destroy()
+
+    if (document.removeEventListener) {
+      document.body.removeEventListener('click', this.onClickOfDOM);
+    } else if (document.detachEvent) {
+      document.body.detachEvent('click', this.onClickOfDOM);
+    }
   }
 
   onChange = (selectedDates, dateStr, instance) => {
     if (this.props.options.onChange) {
       this.props.options.onChange(selectedDates, dateStr, instance);
+      this.setState({ dateStr});
     }
   }
 
   onClickOfDateRanges = (e) => {
-    if (this.props.options.onChange){
-      const ranges = e.target.dataset.rangeValue.split(',').map(v => Number(v));
+    const ranges = e.target.dataset.rangeValue.split(',').map(v => Number(v));
+    const dateStr = `${this.flatpickr.formatDate(new Date(ranges[0]), (this.props.options.dateFormat || defaultFormat))} to ${this.flatpickr.formatDate(new Date(ranges[1]), (this.props.options.dateFormat || defaultFormat))}`;
+    if (this.props.options.onChange) {      
       this.props.options.onChange(
         ranges,
-        `${this.flatpickr.formatDate(new Date(ranges[0]), ( this.props.options.dateFormat ||defaultFormat))} to ${this.flatpickr.formatDate(new Date(ranges[1]), ( this.props.options.dateFormat ||defaultFormat))}`,
+        dateStr,
         this.flatpickr,
       );
     }    
-    this.setState({ showCalendar: false, showPicker: false });
+    this.setState({ showCalendar: false, showPicker: false, dateStr });
   }
 
   onClickOfCustom = () => {
@@ -167,6 +206,12 @@ class DateTimePicker extends Component {
 
   onClickOfChildren = () => {
     this.setState({ showPicker: !this.state.showPicker });
+  }
+
+  onClickOfDOM = (e) => {
+    if (!e.target.parents('.daterangepicker').length && this.state.showPicker) {
+      this.setState({ showPicker: false });
+    }
   }
 
   render() {
@@ -180,25 +225,25 @@ class DateTimePicker extends Component {
 
     if (options.mode && options.mode === 'range') {
       const ranges = options.ranges || DefaultRanges;
-      const active = compareDefaultRanges(options.defaultValue, ranges );
+      const active = compareDefaultRanges(options.defaultValue, ranges);
       const custom = options.defaultValue && !active;
       return (
         <Fragment>
           <div onClick={this.onClickOfChildren}> {children} </div>
           <div className={`daterangepicker dropdown-menu opensright ltr ${this.state.showCalendar || custom ? 'show-calendar' : ''} ${this.state.showPicker ? '' : 'hide'}`}>
             <div className="ranges">
-              <ul>               
+              <ul>
                 {
                   ranges && [
-                    Object.keys(ranges).map((key) => <li key={key} data-range-key={key} data-range-value={DefaultRanges[key]} onClick={this.onClickOfDateRanges} className={active === key ? 'active': ''}> {key} </li>),
-                    <li key={'custom'} data-range-key={'custom'} onClick={this.onClickOfCustom} className={ custom ? 'active': ''  }>Custom </li>
+                    Object.keys(ranges).map((key) => <li key={key} data-range-key={key} data-range-value={DefaultRanges[key]} onClick={this.onClickOfDateRanges} className={active === key ? 'active' : ''}> {key} </li>),
+                    <li key={'custom'} data-range-key={'custom'} onClick={this.onClickOfCustom} className={`${custom ? 'active' : ''} ${this.state.showCalendar ? 'is-focused' : ''}`}>Custom </li>
                   ]
                 }
               </ul>
             </div>
             <div className="hasrange">
               <div className="daterangepicker_input" {...props} ref={node => { this.node = node }}>
-                <input className="input-mini" defaultValue={options.defaultValue} />
+                <input className="input-mini" defaultValue={options.defaultValue} value={this.state.dateStr}/>
               </div>
             </div>
           </div>

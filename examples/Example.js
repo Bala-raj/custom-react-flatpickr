@@ -27,7 +27,7 @@ class Example extends React.Component {
                 <div className="datepicker range">
                     <label className="title"> Date Range Picker </label>
                     <p className="description">You can config Range Picker in calendar.</p>
-                    <div class="highlight">
+                    <div className="highlight">
                         <pre>&#123;`
 
                         

@@ -7,6 +7,8 @@
 
 [Flatpickr](https://github.com/Bala-raj/custom-react-flatpickr) for React.
 
+[Demo](https://date-range-picker-dc66e.firebaseapp.com/) 
+
 ## Usage
 
 ```jsx

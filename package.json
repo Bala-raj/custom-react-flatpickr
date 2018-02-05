@@ -1,5 +1,5 @@
 {
-  "name": "react-flatpickr-pro",
+  "name": "custom-react-flatpickr",
   "version": "1.0.0",
   "scripts": {
     "build": "webpack --config webpack.config.babel.js",

@@ -4,9 +4,6 @@ import PropTypes from 'prop-types';
 import Flatpickr from 'flatpickr';
 import moment from 'moment';
 
-//import 'flatpickr/dist/themes/material_green.css';
-import './style.scss';
-
 const hooks = [
   'onChange',
   'onOpen',
@@ -96,6 +93,7 @@ class DateTimePicker extends Component {
     this.state = {
       showCalendar: false,
       showPicker: false,
+      dateStr: ''
     }
   }
 
@@ -156,6 +154,10 @@ class DateTimePicker extends Component {
       }
     })
 
+    if (options.mode && options.mode === 'range') {
+      options.inline = true;
+    }
+
     this.flatpickr = new Flatpickr(this.node, options)
 
     if (this.props.hasOwnProperty('value')) {
@@ -182,21 +184,22 @@ class DateTimePicker extends Component {
 
   onChange = (selectedDates, dateStr, instance) => {
     if (this.props.options.onChange) {
-      this.props.options.onChange(selectedDates, dateStr, instance);
-      this.setState({ dateStr});
+      if (!(this.props.options.mode === 'range' && (selectedDates.length === 1 || !selectedDates.length)))
+        this.props.options.onChange(selectedDates, dateStr, instance);
+      this.setState({ dateStr });
     }
   }
 
   onClickOfDateRanges = (e) => {
     const ranges = e.target.dataset.rangeValue.split(',').map(v => Number(v));
     const dateStr = `${this.flatpickr.formatDate(new Date(ranges[0]), (this.props.options.dateFormat || defaultFormat))} to ${this.flatpickr.formatDate(new Date(ranges[1]), (this.props.options.dateFormat || defaultFormat))}`;
-    if (this.props.options.onChange) {      
+    if (this.props.options.onChange) {
       this.props.options.onChange(
         ranges,
         dateStr,
         this.flatpickr,
       );
-    }    
+    }
     this.setState({ showCalendar: false, showPicker: false, dateStr });
   }
 
@@ -225,7 +228,7 @@ class DateTimePicker extends Component {
 
     if (options.mode && options.mode === 'range') {
       const ranges = options.ranges || DefaultRanges;
-      const active = compareDefaultRanges(options.defaultValue, ranges);
+      const active = (options.defaultValue && compareDefaultRanges(options.defaultValue, ranges)) || '';
       const custom = options.defaultValue && !active;
       return (
         <Fragment>
@@ -235,7 +238,7 @@ class DateTimePicker extends Component {
               <ul>
                 {
                   ranges && [
-                    Object.keys(ranges).map((key) => <li key={key} data-range-key={key} data-range-value={DefaultRanges[key]} onClick={this.onClickOfDateRanges} className={active === key ? 'active' : ''}> {key} </li>),
+                    Object.keys(ranges).map((key) => <li key={key} data-range-key={key} data-range-value={ranges[key]} onClick={this.onClickOfDateRanges} className={active === key ? 'active' : ''}> {key} </li>),
                     <li key={'custom'} data-range-key={'custom'} onClick={this.onClickOfCustom} className={`${custom ? 'active' : ''} ${this.state.showCalendar ? 'is-focused' : ''}`}>Custom </li>
                   ]
                 }
@@ -243,7 +246,7 @@ class DateTimePicker extends Component {
             </div>
             <div className="hasrange">
               <div className="daterangepicker_input" {...props} ref={node => { this.node = node }}>
-                <input className="input-mini" defaultValue={options.defaultValue} value={this.state.dateStr}/>
+                <input className="input-mini" value={options.defaultValue || this.state.dateStr} readOnly={true} />
               </div>
             </div>
           </div>

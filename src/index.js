@@ -228,7 +228,7 @@ class DateTimePicker extends Component {
 
     if (options.mode && options.mode === 'range') {
       const ranges = options.ranges || DefaultRanges;
-      const active = (options.defaultValue && compareDefaultRanges(options.defaultValue, ranges)) || '';
+      const active = (value && compareDefaultRanges(value, ranges)) ||  (options.defaultValue && compareDefaultRanges(options.defaultValue, ranges)) || '';
       const custom = options.defaultValue && !active;
       return (
         <Fragment>

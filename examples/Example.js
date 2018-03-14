@@ -3,6 +3,15 @@ import React from 'react';
 import DataPicker from '../src/index';
 import './style.scss';
 import '../src/style.scss';
+import moment from 'moment';
+
+const ranges = {
+    Yesterday: [moment().subtract(1, 'days').valueOf(), moment().subtract(1, 'days').valueOf()],
+    'Last 7 Days': [moment().subtract(6, 'days').valueOf(), moment().valueOf()],
+    'Last 30 Days': [moment().subtract(29, 'days').valueOf(), moment().valueOf()],
+    'Last Week': [moment().subtract(1, 'week').startOf('week').valueOf(), moment().subtract(1, 'week').endOf('week').valueOf()],
+    'Last Month': [moment().subtract(1, 'month').startOf('month').valueOf(), moment().subtract(1, 'month').endOf('month').valueOf()],    
+  };
 
 class Example extends React.Component {
     constructor(props) {
@@ -37,7 +46,7 @@ class Example extends React.Component {
                         </pre>
                     </div>
                     <p> { this.state.dateStr} </p>
-                    <DataPicker options={{ mode: "range", inline: true, maxDate: Date.now(), onChange: this.onChange, defaultValue: this.state.dateRange }} >
+                    <DataPicker options={{ mode: "range", inline: true, dateFormat: 'd-M-Y', maxDate: Date.now(), onChange: this.onChange, ranges }} value={this.state.dateRange} >
                         <button>
                             <svg width="14px" height="15px" viewBox="0 0 14 16" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                 <g id="Messages" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">

@@ -26,6 +26,20 @@ const DefaultRanges = {
   'Last Month': [moment().subtract(1, 'month').startOf('month').valueOf(), moment().subtract(1, 'month').endOf('month').valueOf()],
   'This Month': [moment().startOf('month').valueOf(), moment().valueOf()],
 }
+const Months = {
+  'Jan': [moment().startOf('year').startOf('month').utc().valueOf(), moment().startOf('year').endOf('month').utc().valueOf()],
+  'Feb': [moment().startOf('year').add(1,'month').startOf('month').utc().valueOf(), moment().startOf('year').add(1,'month').endOf('month').utc().valueOf()],
+  'Mar': [moment().startOf('year').add(2,'month').startOf('month').utc().valueOf(), moment().startOf('year').add(2,'month').endOf('month').utc().valueOf()],
+  'Apr': [moment().startOf('year').add(3,'month').startOf('month').utc().valueOf(), moment().startOf('year').add(3,'month').endOf('month').utc().valueOf()],
+  'May': [moment().startOf('year').add(4,'month').startOf('month').utc().valueOf(), moment().startOf('year').add(4,'month').endOf('month').utc().valueOf()],
+  'Jun': [moment().startOf('year').add(5,'month').startOf('month').utc().valueOf(), moment().startOf('year').add(5,'month').endOf('month').utc().valueOf()],
+  'Jul': [moment().startOf('year').add(6,'month').startOf('month').utc().valueOf(), moment().startOf('year').add(6,'month').endOf('month').utc().valueOf()],
+  'Aug': [moment().startOf('year').add(7,'month').startOf('month').utc().valueOf(), moment().startOf('year').add(7,'month').endOf('month').utc().valueOf()],
+  'Sep': [moment().startOf('year').add(8,'month').startOf('month').utc().valueOf(), moment().startOf('year').add(8,'month').endOf('month').utc().valueOf()],
+  'Oct': [moment().startOf('year').add(9,'month').startOf('month').utc().valueOf(), moment().startOf('year').add(9,'month').endOf('month').utc().valueOf()],
+  'Nov': [moment().startOf('year').add(10,'month').startOf('month').utc().valueOf(), moment().startOf('year').add(10,'month').endOf('month').utc().valueOf()],
+  'Dec': [moment().startOf('year').add(11,'month').startOf('month').utc().valueOf(), moment().startOf('year').add(11,'month').endOf('month').utc().valueOf()],
+}
 
 function compareDefaultRanges(selectedRanges, rangesList) {
   let match = '';
@@ -202,11 +216,26 @@ class DateTimePicker extends Component {
     }
     this.setState({ showCalendar: false, showPicker: false, dateStr });
   }
-
-  onClickOfCustom = () => {
-    this.setState({ showCalendar: true });
+  onClickOfMonth = (e) => {
+    const ranges = e.target.dataset.rangeValue.split(',').map(v => Number(v));
+    const dateStr = moment(ranges[0]).format('MMM');
+    if (this.props.options.onChange) {
+      this.props.options.onChange(
+        ranges,
+        dateStr,
+        this.flatpickr,
+      );
+    }
+    this.setState({ showCalendar: false, showPicker: false, dateStr });
   }
 
+  onClickOfCustom = () => {
+    this.setState({ showCalendar: true, showBillingCycle: false });
+  }
+
+  onClickOfBillingCyclle = () => {
+    this.setState({ showBillingCycle: true, showCalendar: false });
+  }
   onClickOfChildren = () => {
     this.setState({ showPicker: !this.state.showPicker });
   }
@@ -229,17 +258,19 @@ class DateTimePicker extends Component {
     if (options.mode && options.mode === 'range') {
       const ranges = options.ranges || DefaultRanges;
       const active = (value && compareDefaultRanges(value, ranges)) ||  (options.defaultValue && compareDefaultRanges(options.defaultValue, ranges)) || '';
+      const monthActive = (value && compareDefaultRanges(value, Months)) ||  (options.defaultValue && compareDefaultRanges(options.defaultValue, monthActive)) || '';
       const custom = options.defaultValue && !active;
       return (
         <Fragment>
           <div onClick={this.onClickOfChildren}> {children} </div>
-          <div className={`daterangepicker dropdown-menu opensright ltr ${this.state.showCalendar || custom ? 'show-calendar' : ''} ${this.state.showPicker ? '' : 'hide'}`}>
+          <div className={`daterangepicker dropdown-menu opensright ltr ${this.state.showCalendar || custom ? 'show-calendar' : ''} ${this.state.showBillingCycle ? 'show-month' : ''} ${this.state.showPicker ? '' : 'hide'}`}>
             <div className="ranges">
               <ul>
                 {
                   ranges && [
                     Object.keys(ranges).map((key) => <li key={key} data-range-key={key} data-range-value={ranges[key]} onClick={this.onClickOfDateRanges} className={active === key ? 'active' : ''}> {key} </li>),
-                    <li key={'custom'} data-range-key={'custom'} onClick={this.onClickOfCustom} className={`${custom ? 'active' : ''} ${this.state.showCalendar ? 'is-focused' : ''}`}>Custom </li>
+                    <li key={'custom'} data-range-key={'custom'} onClick={this.onClickOfCustom} className={`${custom ? 'active' : ''} ${this.state.showCalendar ? 'is-focused' : ''}`}>Custom </li>,
+                    <li key={'billingcycle'} data-range-key={'billingcycle'} onClick={this.onClickOfBillingCyclle} className={`${this.state.showBillingCycle ? 'is-focused' : ''}`}>Invoices</li>
                   ]
                 }
               </ul>
@@ -248,6 +279,18 @@ class DateTimePicker extends Component {
               <div className="daterangepicker_input" {...props} ref={node => { this.node = node }}>
                 <input className="input-mini" value={options.defaultValue || this.state.dateStr} readOnly={true} />
               </div>
+              
+            <div className="calender-monthview">
+                <ul>
+                {
+                  Months && [
+                    Object.keys(Months).map((key) => <li key={key} data-range-key={key} data-range-value={Months[key]} onClick={this.onClickOfMonth} className={`${monthActive === key && 'active'} ${(moment(Months[key][0]).valueOf() < moment().subtract(3, 'month').startOf('month').valueOf() || moment(Months[key][0]).valueOf() > moment().endOf('month').valueOf()) && 'disabled'}` }> {key} </li>),
+                    
+                  ]
+                }
+                </ul>
+            </div>
+              
             </div>
           </div>
         </Fragment>

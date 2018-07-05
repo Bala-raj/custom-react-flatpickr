@@ -42,14 +42,9 @@
     &.show-calendar .hasrange {
         display: block;
     }
-    .bootstrap-datetimepicker-wrap {
-        display: none;
-        position: relative;
-        .list-unstyled {
-            padding: 0;
-        }
-        .datepicker {
-            padding: 0;
+    &.show-calendar {
+        .calender-monthview {
+            display: none;
         }
     }
     &.show-month {

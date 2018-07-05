@@ -27,18 +27,18 @@ const DefaultRanges = {
   'This Month': [moment().startOf('month').valueOf(), moment().valueOf()],
 }
 const Months = {
-  'Jan': [moment().startOf('year').startOf('month').utc().valueOf(), moment().startOf('year').endOf('month').utc().valueOf()],
-  'Feb': [moment().startOf('year').add(1,'month').startOf('month').utc().valueOf(), moment().startOf('year').add(1,'month').endOf('month').utc().valueOf()],
-  'Mar': [moment().startOf('year').add(2,'month').startOf('month').utc().valueOf(), moment().startOf('year').add(2,'month').endOf('month').utc().valueOf()],
-  'Apr': [moment().startOf('year').add(3,'month').startOf('month').utc().valueOf(), moment().startOf('year').add(3,'month').endOf('month').utc().valueOf()],
-  'May': [moment().startOf('year').add(4,'month').startOf('month').utc().valueOf(), moment().startOf('year').add(4,'month').endOf('month').utc().valueOf()],
-  'Jun': [moment().startOf('year').add(5,'month').startOf('month').utc().valueOf(), moment().startOf('year').add(5,'month').endOf('month').utc().valueOf()],
-  'Jul': [moment().startOf('year').add(6,'month').startOf('month').utc().valueOf(), moment().startOf('year').add(6,'month').endOf('month').utc().valueOf()],
-  'Aug': [moment().startOf('year').add(7,'month').startOf('month').utc().valueOf(), moment().startOf('year').add(7,'month').endOf('month').utc().valueOf()],
-  'Sep': [moment().startOf('year').add(8,'month').startOf('month').utc().valueOf(), moment().startOf('year').add(8,'month').endOf('month').utc().valueOf()],
-  'Oct': [moment().startOf('year').add(9,'month').startOf('month').utc().valueOf(), moment().startOf('year').add(9,'month').endOf('month').utc().valueOf()],
-  'Nov': [moment().startOf('year').add(10,'month').startOf('month').utc().valueOf(), moment().startOf('year').add(10,'month').endOf('month').utc().valueOf()],
-  'Dec': [moment().startOf('year').add(11,'month').startOf('month').utc().valueOf(), moment().startOf('year').add(11,'month').endOf('month').utc().valueOf()],
+  'Jan': [moment.utc(moment().startOf('year').startOf('month').format('DD MMM YYYY')).valueOf(), moment.utc(moment().startOf('year').endOf('month').format('DD MMM YYYY')).endOf('day').valueOf()],
+  'Feb': [moment.utc(moment().startOf('year').add(1,'month').startOf('month').format('DD MMM YYYY')).valueOf(), moment.utc(moment().startOf('year').add(1,'month').endOf('month').endOf('day').format('DD MMM YYYY')).endOf('day').valueOf()],
+  'Mar': [moment.utc(moment().startOf('year').add(2,'month').startOf('month').format('DD MMM YYYY')).valueOf(), moment.utc(moment().startOf('year').add(2,'month').endOf('month').format('DD MMM YYYY')).endOf('day').valueOf()],
+  'Apr': [moment.utc(moment().startOf('year').add(3,'month').startOf('month').format('DD MMM YYYY')).valueOf(), moment.utc(moment().startOf('year').add(3,'month').endOf('month').format('DD MMM YYYY')).endOf('day').valueOf()],
+  'May': [moment.utc(moment().startOf('year').add(4,'month').startOf('month').format('DD MMM YYYY')).valueOf(), moment.utc(moment().startOf('year').add(4,'month').endOf('month').format('DD MMM YYYY')).endOf('day').valueOf()],
+  'Jun': [moment.utc(moment().startOf('year').add(5,'month').startOf('month').format('DD MMM YYYY')).valueOf(), moment.utc(moment().startOf('year').add(5,'month').endOf('month').format('DD MMM YYYY')).endOf('day').valueOf()],
+  'Jul': [moment.utc(moment().startOf('year').add(6,'month').startOf('month').format('DD MMM YYYY')).valueOf(), moment.utc(moment().startOf('year').add(6,'month').endOf('month').format('DD MMM YYYY')).endOf('day').valueOf()],
+  'Aug': [moment.utc(moment().startOf('year').add(7,'month').startOf('month').format('DD MMM YYYY')).valueOf(), moment.utc(moment().startOf('year').add(7,'month').endOf('month').format('DD MMM YYYY')).endOf('day').valueOf()],
+  'Sep': [moment.utc(moment().startOf('year').add(8,'month').startOf('month').format('DD MMM YYYY')).valueOf(), moment.utc(moment().startOf('year').add(8,'month').endOf('month').format('DD MMM YYYY')).endOf('day').valueOf()],
+  'Oct': [moment.utc(moment().startOf('year').add(9,'month').startOf('month').format('DD MMM YYYY')).valueOf(), moment.utc(moment().startOf('year').add(9,'month').endOf('month').format('DD MMM YYYY')).endOf('day').valueOf()],
+  'Nov': [moment.utc(moment().startOf('year').add(10,'month').startOf('month').format('DD MMM YYYY')).valueOf(), moment.utc(moment().startOf('year').add(10,'month').endOf('month').format('DD MMM YYYY')).endOf('day').valueOf()],
+  'Dec': [moment.utc(moment().startOf('year').add(11,'month').startOf('month').format('DD MMM YYYY')).valueOf(), moment.utc(moment().startOf('year').add(11,'month').endOf('month').format('DD MMM YYYY')).endOf('day').valueOf()],
 }
 
 function compareDefaultRanges(selectedRanges, rangesList) {

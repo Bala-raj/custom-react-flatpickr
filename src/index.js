@@ -215,7 +215,7 @@ class DateTimePicker extends Component {
         this.flatpickr,
       );
     }
-    this.setState({ showCalendar: false, showPicker: false, dateStr });
+    this.setState({ showCalendar: false, showPicker: false, showBillingCycle: false, dateStr });
   }
   onClickOfMonth = (e) => {
     const ranges = e.target.dataset.rangeValue.split(',').map(v => Number(v));

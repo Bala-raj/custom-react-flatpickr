@@ -285,7 +285,7 @@ class DateTimePicker extends Component {
                 <ul>
                 {
                   Months && [
-                    Object.keys(Months).map((key) => <li key={key} data-range-key={key} data-range-value={Months[key]} onClick={this.onClickOfMonth} className={`${monthActive === key && 'active'} ${(moment(Months[key][0]).valueOf() < moment().subtract(3, 'month').startOf('month').valueOf() || moment(Months[key][0]).valueOf() > moment().endOf('month').valueOf()) && 'disabled'}` }> {key} </li>),
+                    Object.keys(Months).map((key) => <li key={key} data-range-key={key} data-range-value={Months[key]} onClick={this.onClickOfMonth} className={`${monthActive === key && 'active'} ${(moment(Months[key][0]).valueOf() < moment(Months['Apr'][0]).valueOf() || moment(Months[key][0]).valueOf() > moment().utc().endOf('month').valueOf()) && 'disabled'}` }> {key} </li>),
                     
                   ]
                 }

@@ -1,4 +1,3 @@
-
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Flatpickr from 'flatpickr';
@@ -28,7 +27,7 @@ const DefaultRanges = {
   'This Month': [moment().startOf('month').valueOf(), moment().valueOf()],
 }
 const Months = {
-  'Jan': [momentObject.utc().startOf('year').subtract(1, 'month').startOf('month').valueOf(), momentObject.utc().endOf('month').valueOf()],
+  'Jan': [momentObject.utc().startOf('year').subtract(1, 'month').startOf('month').valueOf(), momentObject.utc().endOf('month').endOf('day').valueOf()],
   'Feb': [momentObject.utc().add(1,'month').startOf('month').valueOf(), momentObject.utc().endOf('month').endOf('day').valueOf()],
   'Mar': [momentObject.utc().add(1,'month').startOf('month').valueOf(), momentObject.utc().endOf('month').endOf('day').valueOf()],
   'Apr': [momentObject.utc().add(1,'month').startOf('month').valueOf(), momentObject.utc().endOf('month').endOf('day').valueOf()],
@@ -215,11 +214,11 @@ class DateTimePicker extends Component {
         this.flatpickr,
       );
     }
-    this.setState({ showCalendar: false, showPicker: false, dateStr });
+    this.setState({ showCalendar: false, showPicker: false, showBillingCycle: false, dateStr });
   }
   onClickOfMonth = (e) => {
     const ranges = e.target.dataset.rangeValue.split(',').map(v => Number(v));
-    const dateStr = moment(ranges[0]).format('MMM');
+    const dateStr = moment.utc(ranges[0]).format('MMM');
     if (this.props.options.onChange) {
       this.props.options.onChange(
         ranges,
@@ -285,7 +284,7 @@ class DateTimePicker extends Component {
                 <ul>
                 {
                   Months && [
-                    Object.keys(Months).map((key) => <li key={key} data-range-key={key} data-range-value={Months[key]} onClick={this.onClickOfMonth} className={`${monthActive === key && 'active'} ${(moment(Months[key][0]).valueOf() < moment().subtract(3, 'month').startOf('month').valueOf() || moment(Months[key][0]).valueOf() > moment().endOf('month').valueOf()) && 'disabled'}` }> {key} </li>),
+                    Object.keys(Months).map((key) => <li key={key} data-range-key={key} data-range-value={Months[key]} onClick={this.onClickOfMonth} className={`${monthActive === key && 'active'} ${(moment(Months[key][0]).valueOf() < moment().subtract(3, 'months').startOf('month').valueOf() || moment(Months[key][0]).valueOf() > moment().utc().endOf('month').valueOf()) && 'disabled'}` }> {key} </li>),
                     
                   ]
                 }

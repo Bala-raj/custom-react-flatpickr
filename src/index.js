@@ -281,6 +281,21 @@ class DateTimePicker extends Component {
               </div>
               
             <div className="calender-monthview">
+                <div className="flatpickr-month">
+                    <span className="flatpickr-prev-month" style={{display: 'block'}}>
+                        <svg width="11px" height="8px" viewBox="6 8 13 8" version="1.1">
+                          <path d="M10,18 C9.744,18 9.488,17.902 9.293,17.707 C8.902,17.316 8.902,16.684 9.293,16.293 L13.586,12 L9.293,7.707 C8.902,7.316 8.902,6.684 9.293,6.293 C9.684,5.902 10.316,5.902 10.707,6.293 L15.707,11.293 C16.098,11.684 16.098,12.316 15.707,12.707 L10.707,17.707 C10.512,17.902 10.256,18 10,18" stroke="none" fill="#3B4752" fillRule="evenodd" transform="translate(12.500000, 11.999875) rotate(90.000000) translate(-12.500000, -11.999875) " />
+                        </svg>
+                    </span>
+                    <div className="flatpickr-current-month">
+                        <div className="numInputWrapper"><input className="numInput cur-year" type="text" pattern="\d*" tabIndex="-1" data-max="2018" value="2018" /></div>
+                    </div>
+                    <span className="flatpickr-next-month" style={{display: 'block'}}>
+                        <svg width="11px" height="8px" viewBox="6 8 13 8" version="1.1">
+                          <path d="M10,18 C9.744,18 9.488,17.902 9.293,17.707 C8.902,17.316 8.902,16.684 9.293,16.293 L13.586,12 L9.293,7.707 C8.902,7.316 8.902,6.684 9.293,6.293 C9.684,5.902 10.316,5.902 10.707,6.293 L15.707,11.293 C16.098,11.684 16.098,12.316 15.707,12.707 L10.707,17.707 C10.512,17.902 10.256,18 10,18" stroke="none" fill="#3B4752" fillRule="evenodd" transform="translate(12.500000, 11.999875) rotate(90.000000) translate(-12.500000, -11.999875) " />
+                        </svg>
+                    </span>
+                </div>
                 <ul>
                 {
                   Months && [

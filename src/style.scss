@@ -390,6 +390,12 @@
     padding: 0px calc(3.57% - 1.5px);
     z-index: 3;
 }
+.flatpickr-prev-month {
+    transform: rotate(90deg);   
+}
+.flatpickr-next-month {
+    transform: rotate(-90deg);   
+}
 
 .flatpickr-prev-month i,
 .flatpickr-next-month i {

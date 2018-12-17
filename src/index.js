@@ -229,6 +229,15 @@ class DateTimePicker extends Component {
     this.setState({ showCalendar: false, showPicker: false, dateStr });
   }
 
+  onClickOfPrevYear = () => {
+    this.setState({ showCalendar: false, showPicker: true, yearStr: Number(this.state.yearStr)-1, showNextYear: true, showPreviousYear: false });
+  }
+
+  onClickOfNextYear = () => {
+    this.setState({ showCalendar: false, showPicker: true, yearStr: Number(this.state.yearStr)+1, showNextYear: false, showPreviousYear: true });
+    const nextMonthRange = [moment().utc().add(1, 'month').startOf('month').valueOf(), moment().utc().add(1, 'month').endOf('month').valueOf()];
+    this.setState({ Months: { ...Months, Jan: nextMonthRange } });
+  }
   onClickOfCustom = () => {
     this.setState({ showCalendar: true, showBillingCycle: false });
   }

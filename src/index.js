@@ -105,9 +105,13 @@ class DateTimePicker extends Component {
     super();
 
     this.state = {
+      months: Months,
       showCalendar: false,
       showPicker: false,
-      dateStr: ''
+      showPreviousYear: false,
+      showNextYear: false,
+      dateStr: '',
+      yearStr: ''
     }
   }
 
@@ -183,6 +187,12 @@ class DateTimePicker extends Component {
     } else if (document.attachEvent) {
       document.body.attachEvent('click', this.onClickOfDOM);
     }
+    if(moment.utc().format('MMM') === 'Dec') {
+      this.setState({ showNextYear: true, showPreviousYear: false, yearStr:  moment.utc().format('YYYY') });
+    }
+    if(moment.utc().format('MMM') === 'Jan') {
+      this.setState({ showNextYear: false, showPreviousYear: true, yearStr:  moment.utc().format('YYYY')});
+    }
   }
 
 
@@ -218,7 +228,9 @@ class DateTimePicker extends Component {
   }
   onClickOfMonth = (e) => {
     const ranges = e.target.dataset.rangeValue.split(',').map(v => Number(v));
+    console.info('range: ',ranges);//eslint-disable-line
     const dateStr = moment.utc(ranges[0]).format('MMM');
+    console.info('Month: ',dateStr);//eslint-disable-line
     if (this.props.options.onChange) {
       this.props.options.onChange(
         ranges,
@@ -230,13 +242,19 @@ class DateTimePicker extends Component {
   }
 
   onClickOfPrevYear = () => {
-    this.setState({ showCalendar: false, showPicker: true, yearStr: Number(this.state.yearStr)-1, showNextYear: true, showPreviousYear: false });
+    let object = {};
+    Object.keys(this.state.months).map((key) => {
+      object[key] = [moment.utc(this.state.months[key][0]).subtract(1,'year').valueOf(),moment.utc(this.state.months[key][1]).subtract(1,'year').valueOf()]
+    });
+    this.setState({ months: object, showCalendar: false, showPicker: true, yearStr: Number(this.state.yearStr)-1, showNextYear: true, showPreviousYear: false });
   }
 
   onClickOfNextYear = () => {
-    this.setState({ showCalendar: false, showPicker: true, yearStr: Number(this.state.yearStr)+1, showNextYear: false, showPreviousYear: true });
-    const nextMonthRange = [moment().utc().add(1, 'month').startOf('month').valueOf(), moment().utc().add(1, 'month').endOf('month').valueOf()];
-    this.setState({ Months: { ...Months, Jan: nextMonthRange } });
+    let object = {};
+    Object.keys(this.state.months).map((key) => {
+      object[key] = [moment.utc(this.state.months[key][0]).add(1,'year').valueOf(),moment.utc(this.state.months[key][1]).add(1,'year').valueOf()]
+    });
+    this.setState({ months: object, showCalendar: false, showPicker: true, yearStr: Number(this.state.yearStr)+1, showNextYear: true, showPreviousYear: true  });
   }
   onClickOfCustom = () => {
     this.setState({ showCalendar: true, showBillingCycle: false });
@@ -263,11 +281,12 @@ class DateTimePicker extends Component {
     hooks.forEach(hook => {
       delete props[hook]
     })
+    
 
     if (options.mode && options.mode === 'range') {
       const ranges = options.ranges || DefaultRanges;
       const active = (value && compareDefaultRanges(value, ranges)) ||  (options.defaultValue && compareDefaultRanges(options.defaultValue, ranges)) || '';
-      const monthActive = (value && compareDefaultRanges(value, Months)) ||  (options.defaultValue && compareDefaultRanges(options.defaultValue, monthActive)) || '';
+      const monthActive = (value && compareDefaultRanges(value, this.state.months)) ||  (options.defaultValue && compareDefaultRanges(options.defaultValue, monthActive)) || '';
       const custom = options.defaultValue && !active;
       return (
         <Fragment>
@@ -291,15 +310,15 @@ class DateTimePicker extends Component {
               
             <div className="calender-monthview">
                 <div className="flatpickr-month">
-                    <span className="flatpickr-prev-month" style={{display: 'block'}}>
+                    <span className="flatpickr-prev-month" style={this.state.showPreviousYear ? {display: 'block'} : {display: 'none'}} onClick={this.onClickOfPrevYear}>
                         <svg width="11px" height="8px" viewBox="6 8 13 8" version="1.1">
                           <path d="M10,18 C9.744,18 9.488,17.902 9.293,17.707 C8.902,17.316 8.902,16.684 9.293,16.293 L13.586,12 L9.293,7.707 C8.902,7.316 8.902,6.684 9.293,6.293 C9.684,5.902 10.316,5.902 10.707,6.293 L15.707,11.293 C16.098,11.684 16.098,12.316 15.707,12.707 L10.707,17.707 C10.512,17.902 10.256,18 10,18" stroke="none" fill="#3B4752" fillRule="evenodd" transform="translate(12.500000, 11.999875) rotate(90.000000) translate(-12.500000, -11.999875) " />
                         </svg>
                     </span>
                     <div className="flatpickr-current-month">
-                        <div className="numInputWrapper"><input className="numInput cur-year" type="text" pattern="\d*" tabIndex="-1" data-max="2018" value="2018" /></div>
+                        <div className="numInputWrapper"><input className="numInput cur-year" type="text" pattern="\d*" tabIndex="-1" data-max={this.state.yearStr || moment.utc().format('YYYY')} value={this.state.yearStr || moment.utc().format('YYYY')} /></div>
                     </div>
-                    <span className="flatpickr-next-month" style={{display: 'block'}}>
+                    <span className="flatpickr-next-month" style={this.state.showNextYear ? {display: 'block'} : {display: 'none'}} onClick={this.onClickOfNextYear}>
                         <svg width="11px" height="8px" viewBox="6 8 13 8" version="1.1">
                           <path d="M10,18 C9.744,18 9.488,17.902 9.293,17.707 C8.902,17.316 8.902,16.684 9.293,16.293 L13.586,12 L9.293,7.707 C8.902,7.316 8.902,6.684 9.293,6.293 C9.684,5.902 10.316,5.902 10.707,6.293 L15.707,11.293 C16.098,11.684 16.098,12.316 15.707,12.707 L10.707,17.707 C10.512,17.902 10.256,18 10,18" stroke="none" fill="#3B4752" fillRule="evenodd" transform="translate(12.500000, 11.999875) rotate(90.000000) translate(-12.500000, -11.999875) " />
                         </svg>
@@ -307,8 +326,8 @@ class DateTimePicker extends Component {
                 </div>
                 <ul>
                 {
-                  Months && [
-                    Object.keys(Months).map((key) => <li key={key} data-range-key={key} data-range-value={Months[key]} onClick={this.onClickOfMonth} className={`${monthActive === key && 'active'} ${(moment(Months[key][0]).valueOf() < moment().subtract(3, 'months').startOf('month').valueOf() || moment(Months[key][0]).valueOf() > moment().utc().endOf('month').valueOf()) && 'disabled'}` }> {key} </li>),
+                  this.state.months && [
+                    Object.keys(this.state.months).map((key) => <li key={key} data-range-key={key} data-range-value={this.state.months[key]} onClick={this.onClickOfMonth} className={`${monthActive === key && 'active'} ${(moment(this.state.months[key][0]).valueOf() < moment().subtract(3, 'months').startOf('month').valueOf() || moment(this.state.months[key][0]).valueOf() > moment().utc().endOf('month').valueOf()) && 'disabled'}` }> {key} </li>),
                     
                   ]
                 }

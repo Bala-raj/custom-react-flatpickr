@@ -109,7 +109,7 @@ class DateTimePicker extends Component {
       showCalendar: false,
       showPicker: false,
       showPreviousYear: false,
-      showNextYear: true,
+      showNextYear: false,
       dateStr: '',
       yearStr: moment.utc().format('YYYY')
     }
@@ -240,7 +240,7 @@ class DateTimePicker extends Component {
     Object.keys(this.state.months).map((key) => {
       object[key] = [moment.utc(this.state.months[key][0]).subtract(1,'year').valueOf(),moment.utc(this.state.months[key][1]).subtract(1,'year').valueOf()]
     });
-    this.setState({ months: object, showCalendar: false, showPicker: true, yearStr: Number(this.state.yearStr)-1 /*, showNextYear: true, showPreviousYear: true*/ });
+    this.setState({ months: object, showCalendar: false, showPicker: true, yearStr: Number(this.state.yearStr)-1 , showNextYear: true/*, showPreviousYear: true*/ });
   }
 
   onClickOfNextYear = () => {
@@ -248,13 +248,16 @@ class DateTimePicker extends Component {
     Object.keys(this.state.months).map((key) => {
       object[key] = [moment.utc(this.state.months[key][0]).add(1,'year').valueOf(),moment.utc(this.state.months[key][1]).add(1,'year').valueOf()]
     });
-    this.setState({ months: object, showCalendar: false, showPicker: true, yearStr: Number(this.state.yearStr)+1/*, showNextYear: true, showPreviousYear: true */ });
+    this.setState({ months: object, showCalendar: false, showPicker: true, yearStr: Number(this.state.yearStr)+1, showNextYear: false/*, showPreviousYear: true */ });
   }
   onClickOfCustom = () => {
     this.setState({ showCalendar: true, showBillingCycle: false });
   }
 
   onClickOfBillingCyclle = () => {
+    if(moment.utc().format('MMM') === 'Dec' && moment.utc().format('YYYY') === this.state.yearStr){
+      this.onClickOfNextYear();
+    }
     this.setState({ showBillingCycle: true, showCalendar: false });
   }
   onClickOfChildren = () => {
@@ -290,9 +293,9 @@ class DateTimePicker extends Component {
               <ul>
                 {
                   ranges && [
+                    <li key={'billingcycle'} data-range-key={'billingcycle'} onClick={this.onClickOfBillingCyclle} className={`${this.state.showBillingCycle ? 'is-focused' : ''}`}>Invoices</li>,
                     Object.keys(ranges).map((key) => <li key={key} data-range-key={key} data-range-value={ranges[key]} onClick={this.onClickOfDateRanges} className={active === key ? 'active' : ''}> {key} </li>),
-                    <li key={'custom'} data-range-key={'custom'} onClick={this.onClickOfCustom} className={`${custom ? 'active' : ''} ${this.state.showCalendar ? 'is-focused' : ''}`}>Custom </li>,
-                    <li key={'billingcycle'} data-range-key={'billingcycle'} onClick={this.onClickOfBillingCyclle} className={`${this.state.showBillingCycle ? 'is-focused' : ''}`}>Invoices</li>
+                    <li key={'custom'} data-range-key={'custom'} onClick={this.onClickOfCustom} className={`${custom ? 'active' : ''} ${this.state.showCalendar ? 'is-focused' : ''}`}>Custom </li>
                   ]
                 }
               </ul>
@@ -315,7 +318,7 @@ class DateTimePicker extends Component {
                            <p>{this.state.yearStr || moment.utc().format('YYYY')}</p>
                          </div>
                     </div>
-                    <span className="flatpickr-next-month" style={this.state.showNextYear ? {display: 'block'} : {display: 'none'}} onClick={this.onClickOfNextYear}>
+                    <span className="flatpickr-next-month" style={Number(this.state.yearStr) > Number(moment.utc().format('YYYY')) ? {display: 'none'} : {display: 'block'}} onClick={this.onClickOfNextYear}>
                         <svg version="1.1" viewBox="0 0 17 17">
                           <g></g>
                           <path d="M13.207 8.472l-7.854 7.854-0.707-0.707 7.146-7.146-7.146-7.148 0.707-0.707 7.854 7.854z"></path>

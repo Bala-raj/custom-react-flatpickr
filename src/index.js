@@ -318,7 +318,7 @@ class DateTimePicker extends Component {
                            <p>{this.state.yearStr || moment.utc().format('YYYY')}</p>
                          </div>
                     </div>
-                    <span className="flatpickr-next-month" style={Number(this.state.yearStr) > Number(moment.utc().format('YYYY')) ? {display: 'none'} : {display: 'block'}} onClick={this.onClickOfNextYear}>
+                    <span className="flatpickr-next-month" style={Number(this.state.yearStr) >= Number(moment.utc().format('YYYY')) ? {display: 'none'} : {display: 'block'}} onClick={this.onClickOfNextYear}>
                         <svg version="1.1" viewBox="0 0 17 17">
                           <g></g>
                           <path d="M13.207 8.472l-7.854 7.854-0.707-0.707 7.146-7.146-7.146-7.148 0.707-0.707 7.854 7.854z"></path>
